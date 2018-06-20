@@ -9,7 +9,7 @@ wpi.setup("gpio");
 //  E |   | C
 //     ---
 //      D
-var allowedChars=["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","h","i","j","l","o","p","q","s","t","u","y"];
+var allowedChars=["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","h","i","j","l","o","p","q","s","t","u","y","-","="];
 codigitToSegment = [
     // XGFEDCBA
     0b00111111, // 0
@@ -38,7 +38,9 @@ codigitToSegment = [
     0b01101101, // S
     0b01111000, // t
     0b00111110, // U
-    0b01100110 //y
+    0b01100110, //y
+    0b01000000,  //-
+    0b01001000  //=
 ];
 
 const sleep = () => new Promise((r) => setTimeout(r, 1));
@@ -123,7 +125,7 @@ module.exports = class TM1637Display {
         await this.high(this.pinDIO);
     }
 
-    show(message, split=false){
+    show(message, split=false, callback=null){
       var msg=(message+"").substring(0,4).toLowerCase();
       var m=[null,null,null,null];
       for (let i = msg.length; i >= 0 ; i--) {
@@ -131,10 +133,10 @@ module.exports = class TM1637Display {
         if(ind>-1)
         m[(4-msg.length)+i]=ind;
       }
-      this.sendData(m,split);
+      this.sendData(m,split,()=>{if(callback)callback();});
     }
 
-    async sendData(nums, split = false) {
+    async sendData(nums, split = false, cb=null) {
         let numsEncoded = [0, 0, 0, 0].map((u, i) => codigitToSegment[nums[i]] || 0);
         if (split) numsEncoded[1] = numsEncoded[1] | 0b10000000; // the x of 2nd pos
 
@@ -152,5 +154,6 @@ module.exports = class TM1637Display {
         await this.start(); // 地址命令设置
         await this.writeByte(0b10001111); // 显示控制命令设置, 开, 亮度为 111
         await this.stop();
+        if(cb)cb();
     }
 }
