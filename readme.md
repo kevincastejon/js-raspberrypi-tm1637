@@ -27,7 +27,7 @@ Usage:
     var tm=new TM1637(CLKPIN,DIOPIN);
     tm.show("PI00");
 ```
-You can feed the second parameter with a boolean to enable the semi-colon separator
+You can feed the second parameter with a boolean to enable the semi-colon separator (default is false)
 ```
     tm.show("1337",true);   // 13:37
 ```
