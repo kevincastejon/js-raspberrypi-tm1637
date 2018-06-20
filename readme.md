@@ -32,4 +32,4 @@ You can feed the second parameter with a boolean to enable the semi-colon separa
     tm.show("1337",true);   // 13:37
 ```
 
-[Github sources](https://github.com/lePioo/PiooJSTools)
+[Github sources](https://github.com/lePioo/TM1637)
