@@ -123,7 +123,7 @@ module.exports = class TM1637Display {
         await this.high(this.pinDIO);
     }
 
-    send(message, split=false){
+    show(message, split=false){
       var msg=(message+"").substring(0,4).toLowerCase();
       var m=[];
       for (let i = 0; i < 4; i++) {
