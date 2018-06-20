@@ -126,11 +126,10 @@ module.exports = class TM1637Display {
     show(message, split=false){
       var msg=(message+"").substring(0,4).toLowerCase();
       var m=[null,null,null,null];
-      for (let i = 4; i > 0; i--) {
-        if(msg.length<i)continue;
+      for (let i = msg.length; i >= 0 ; i--) {
         var ind = allowedChars.indexOf(msg[i]);
         if(ind>-1)
-        m[i]=ind;
+        m[(4-msg.length)+i]=ind;
       }
       this.sendData(m,split);
     }

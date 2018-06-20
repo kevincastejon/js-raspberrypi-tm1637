@@ -1,6 +1,6 @@
 {
     "name": "lepioo.tm1637",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "Control LCD tm1637 display from a raspberry pi",
     "main": "TM1637.js",
     "scripts": {
