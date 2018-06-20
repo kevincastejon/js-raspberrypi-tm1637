@@ -1,0 +1,16 @@
+{
+  "name": "lepioo.tm1637",
+  "version": "1.0.0",
+  "description": "Control LCD tm1637 display from a raspberry pi",
+  "main": "TM1637.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tm1637",
+    "raspberry",
+    "pi"
+  ],
+  "author": "lepioo",
+  "license": "ISC"
+}
