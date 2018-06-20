@@ -130,7 +130,7 @@ module.exports = class TM1637Display {
         if(msg.length<i)continue;
         var ind = allowedChars.indexOf(msg[i]);
         if(ind>-1)
-        m[i](ind);
+        m[i]=ind;
       }
       this.sendData(m,split);
     }
