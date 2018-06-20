@@ -6,7 +6,7 @@
 
 You can control a LCD tm1637 with facultative semi-colon separator  
 
-Allowed characters : 0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,h,i,j,l,o,p,q,s,t,u,y,-,=
+Allowed characters : 0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,h,i,j,l,o,p,q,s,t,u,y,-,=,°,[,]
 
 You need [WiringPi](http://wiringpi.com/download-and-install/) library installed on your raspberry pi.
 
