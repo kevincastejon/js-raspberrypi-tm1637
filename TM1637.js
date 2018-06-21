@@ -9,7 +9,7 @@ wpi.setup("gpio");
 //  E |   | C
 //     ---
 //      D
-var allowedChars=["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","h","i","j","l","o","p","q","s","t","u","y","-","=","°","[","]"];
+var allowedChars=["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","h","i","j","l","o","p","q","s","t","u","y"];
 codigitToSegment = [
     // XGFEDCBA
     0b00111111, // 0
@@ -38,12 +38,7 @@ codigitToSegment = [
     0b01101101, // S
     0b01111000, // t
     0b00111110, // U
-    0b01100110, //y
-    0b01000000,  //-
-    0b01001000,  //=
-    0b01100011,  //°
-    0b00111001, // [
-    0b00001111 // ]
+    0b01100110 //y
 ];
 
 const sleep = () => new Promise((r) => setTimeout(r, 1));
@@ -65,67 +60,67 @@ module.exports = class TM1637Display {
 
     }
 
-    async high(pin) {
+     high(pin) {
         wpi.digitalWrite(pin, this.trueValue);
-        await sleep();
+         sleep();
     }
 
-    async low(pin) {
+     low(pin) {
         wpi.digitalWrite(pin, 1 - this.trueValue);
-        await sleep();
+         sleep();
     }
 
     // clock high in, high out
-    async start() {
+     start() {
         // pinDIO  high -> low when clock is high
         // this.high(this.pinDIO);
         // this.high(this.pinClk);
-        await this.low(this.pinDIO);
+         this.low(this.pinDIO);
     }
 
     // clock high in, high out
-    async writeBit(value) {
+     writeBit(value) {
         // 一个上升沿
-        await this.low(this.pinClk);
+         this.low(this.pinClk);
         // change the value when clock is low
         if (value)
-            await this.high(this.pinDIO);
+             this.high(this.pinDIO);
         else
-            await this.low(this.pinDIO);
+             this.low(this.pinDIO);
 
-        await this.high(this.pinClk);
+         this.high(this.pinClk);
     }
-    async readAck() {
+     readAck() {
         // 8号下降沿
-        await this.low(this.pinClk);
+         this.low(this.pinClk);
         wpi.pinMode(this.pinDIO, wpi.INPUT);
         // 9号上升沿
-        await this.high(this.pinClk);
+         this.high(this.pinClk);
         const ack = wpi.digitalRead(this.pinDIO);
         // if(ack === 0)  scucces, low
         wpi.pinMode(this.pinDIO, wpi.OUTPUT);
         // 9号下降沿
-        await this.low(this.pinClk);
+         this.low(this.pinClk);
         // console.log(ack);
         return ack;
     }
 
     // clock high in, low out
-    async writeByte(byte) { // 0b00000000
+     writeByte(byte) { // 0b00000000
         let b = byte;
         for (let i = 0; i < 8; i++) {
-            await this.writeBit(b & 0x01);
+             this.writeBit(b & 0x01);
             b >>= 1;
         }
-        return await this.readAck();
+        return  this.readAck();
 }
 
     // clock low in, high out
-    async stop() {
+     stop() {
         // pinDIO  low -> high  when clock is high
-        await this.low(this.pinDIO);
-        await this.high(this.pinClk);
-        await this.high(this.pinDIO);
+         this.low(this.pinDIO);
+         this.high(this.pinClk);
+         this.high(this.pinDIO);
     }
 
     show(message, split=false, callback=null){
@@ -139,24 +134,24 @@ module.exports = class TM1637Display {
       this.sendData(m,split,()=>{if(callback)callback();});
     }
 
-    async sendData(nums, split = false, cb=null) {
+     sendData(nums, split = false, cb=null) {
         let numsEncoded = [0, 0, 0, 0].map((u, i) => codigitToSegment[nums[i]] || 0);
         if (split) numsEncoded[1] = numsEncoded[1] | 0b10000000; // the x of 2nd pos
 
-        await this.start(); // 数据命令设置
-        await this.writeByte(0b01000000); // 普通模式, 自动地址增加, 写数据到显示寄存器
-        await this.stop();
+         this.start(); // 数据命令设置
+         this.writeByte(0b01000000); // 普通模式, 自动地址增加, 写数据到显示寄存器
+         this.stop();
 
-        await this.start(); // 地址命令设置
-        await this.writeByte(0b11000000); // 地址起始位 从0开始
+         this.start(); // 地址命令设置
+         this.writeByte(0b11000000); // 地址起始位 从0开始
         for (let i = 0; i < numsEncoded.length; i++) {
-            await this.writeByte(numsEncoded[i]);
+             this.writeByte(numsEncoded[i]);
         }
-        await this.stop();
+         this.stop();
 
-        await this.start(); // 地址命令设置
-        await this.writeByte(0b10001111); // 显示控制命令设置, 开, 亮度为 111
-        await this.stop();
+         this.start(); // 地址命令设置
+         this.writeByte(0b10001111); // 显示控制命令设置, 开, 亮度为 111
+         this.stop();
         if(cb)cb();
     }
 }

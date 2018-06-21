@@ -2,7 +2,7 @@
 
 ## Control LCD display tm1637 from a raspberry pi
 
-[Original project](https://github.com/thesadabc/raspberrypi-tm1637-4display)
+Original work from [https://github.com/thesadabc/raspberrypi-tm1637-4display](https://github.com/thesadabc/raspberrypi-tm1637-4display)
 
 You can control a LCD tm1637 with facultative semi-colon separator  
 
@@ -33,7 +33,7 @@ You can feed the second parameter with a boolean to enable the semi-colon separa
     tm.show("1337",true);   // 13:37
 ```
 
-You can add a callback function as a third parameter to be called when the LCD is ready to display a new message
+You can add a callback function as a third parameter to be called when the LCD has displayed the message
 ```
     tm.show("1337",true,()=>{console.log("done")});
 ```
