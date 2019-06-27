@@ -1,4 +1,4 @@
-# lepioo.tm1637
+# js-raspberrypi-tm1637
 
 ## Control LCD display tm1637 from a raspberry pi
 
@@ -8,34 +8,57 @@ You can control a LCD tm1637 with facultative semi-colon separator
 
 Allowed characters : [aA-zZ],[0-9], ,°,-,=,[,],(,)
 
-You need [WiringPi](http://wiringpi.com/download-and-install/) library installed on your raspberry pi.
+## Dependencies
 
-You can install it that way:
+You need [WiringPi](http://wiringpi.com/download-and-install/) library installed on your raspberry pi.
 ```
-    sudo apt-get install wiringpi
+    sudo apt-get install python-dev python-pip
+    sudo pip install wiringpi
+
 ```
+
+## Installation
+
 Then install this module that way:
 ```
-    npm install lepioo.tm1637
+    npm install raspberrypi-tm1637
 ```
 
-Usage:
+## Usage
+
+Warning !! Using WIRINNGPI pin numerotation !
+Please see : https://fr.pinout.xyz/pinout/wiringpi#
 ```
-    const TM1637 = require('lepioo.tm1637');
-    const CLKPIN=21;
-    const DIOPIN=20;
-    var tm=new TM1637(CLKPIN,DIOPIN);
-    tm.show("PI00");
+    const TM1637 = require('raspberrypi-tm1637');
+    const CLKPIN = 29;
+    const DIOPIN = 28;
+    const tm = new TM1637(CLKPIN, DIOPIN);
+
+    // 4 characters max. Extra characters will be ignored
+
+    tm.text="helo";     // Shows "helo"
+
+    tm.text="2130";     // Shows "21:30"
+    tm.split=true;      //
+
+    tm.text="foo";      //
+    tm.alignLeft=false; // Shows " foo"
+    tm.alignLeft=true;  // Shows "foo "
+
 ```
 
-You can feed the second parameter with a boolean to enable the semi-colon separator (default is false)
-```
-    tm.show("1337",true);   // 13:37
-```
+## API
 
-You can add a callback function as a third parameter to be called when the LCD has displayed the message
-```
-    tm.show("1337",true,()=>{console.log("done")});
-```
+### Methods
+
+  - constructor(pinClk, pinDIO)
+    - pinClk : int. The clock pin number using WIRINGPI pin numerotation
+    - pinDIO : int. The data pin number using WIRINGPI pin numerotation
+
+### Properties
+
+  - text : string. Four characters max. Extra chars will be ignored.
+  - split : boolean. Default false. Will display the semi-colon separator based on that value. (good for clock or time usage)
+  - alignLeft : boolean. Default false. Will align the text, if less than four characters, on the left if true, on the right if false.
 
 [Github sources](https://github.com/lePioo/TM1637)

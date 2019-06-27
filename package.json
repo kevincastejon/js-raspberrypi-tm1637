@@ -1,19 +1,30 @@
 {
-    "name": "lepioo.tm1637",
-    "version": "1.0.10",
-    "description": "Control LCD tm1637 display from a raspberry pi",
-    "main": "TM1637.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [
+  "name": "raspberrypi-tm1637",
+  "version": "1.0.10",
+  "description": "Control LCD tm1637 display from a raspberry pi",
+  "main": "TM1637.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
     "tm1637",
     "raspberry",
     "pi"
   ],
-    "dependencies": {
-        "node-wiring-pi": "~0.0.4"
-    },
-    "author": "lepioo",
-    "license": "ISC"
+  "dependencies": {
+    "node-wiring-pi": "~0.0.4"
+  },
+  "author": "kevincastejon",
+  "license": "ISC",
+  "directories": {
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevincastejon/js-raspberrypi-tm1637.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kevincastejon/js-raspberrypi-tm1637/issues"
+  },
+  "homepage": "https://github.com/kevincastejon/js-raspberrypi-tm1637#readme"
 }

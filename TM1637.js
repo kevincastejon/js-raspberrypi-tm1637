@@ -1,5 +1,5 @@
 const wpi = require('node-wiring-pi');
-wpi.setup("gpio");
+wpi.setup("wpi");
 
 //
 //      A
@@ -155,26 +155,27 @@ codigitToSegment = [
 
 const sleep = () => new Promise((r) => setTimeout(r, 1));
 
-module.exports = class TM1637Display {
+module.exports = class TM1637 {
 
-    constructor(pinClk, pinDIO, trueValue = 1) {
+    constructor(pinClk, pinDIO) {
         this.pinClk = pinClk;
         this.pinDIO = pinDIO;
-        this.trueValue = trueValue;
-
+        this._text = '';
+        this._split = false;
+        this._alignLeft = false;
         wpi.pinMode(this.pinClk, wpi.OUTPUT);
         wpi.pinMode(this.pinDIO, wpi.OUTPUT);
-        wpi.digitalWrite(this.pinClk, this.trueValue);
-        wpi.digitalWrite(this.pinDIO, this.trueValue);
+        wpi.digitalWrite(this.pinClk, 1);
+        wpi.digitalWrite(this.pinDIO, 1);
     }
 
      high(pin) {
-        wpi.digitalWrite(pin, this.trueValue);
+        wpi.digitalWrite(pin, 1);
          sleep();
     }
 
      low(pin) {
-        wpi.digitalWrite(pin, 1 - this.trueValue);
+        wpi.digitalWrite(pin, 1 - 1);
          sleep();
     }
 
@@ -216,35 +217,60 @@ module.exports = class TM1637Display {
          this.high(this.pinDIO);
     }
 
-    show(message, split=false, callback=null){
-      var msg=(message+"").substring(0,4).toLowerCase();
-      var m=[null,null,null,null];
-      for (let i = msg.length; i >= 0 ; i--) {
-        var ind = allowedChars.indexOf(msg[i]);
-        if(ind>-1)
-        m[(4-msg.length)+i]=ind;
-      }
-      this.sendData(m,split,()=>{if(callback)callback();});
+    set text(message){
+      this._text = (message+"").substring(0,4);
+      this.sendData();
     }
 
-     sendData(nums, split = false, cb=null) {
-        let numsEncoded = [0, 0, 0, 0].map((u, i) => codigitToSegment[nums[i]] || 0);
-        if (split) numsEncoded[1] = numsEncoded[1] | 0b10000000;
+    get text(){
+      return this._text;
+    }
 
-         this.start();
-         this.writeByte(0b01000000);
-         this.stop();
+    set split(value){
+      this._split = value === true ? true : false;
+      this.sendData();
+    }
 
-         this.start();
-         this.writeByte(0b11000000);
-        for (let i = 0; i < numsEncoded.length; i++) {
-             this.writeByte(numsEncoded[i]);
-        }
-         this.stop();
+    get split(){
+      return this._split;
+    }
 
-         this.start();
-         this.writeByte(0b10001111); 
-         this.stop();
-        if(cb)cb();
+    set alignLeft(value){
+      this._alignLeft = value === true ? true : false;
+      this.sendData();
+    }
+
+    get alignLeft(){
+      return this._alignLeft;
+    }
+
+    sendData() {
+     var m=[null,null,null,null];
+     for (let i = this._text.length; i >= 0 ; i--) {
+       var ind = allowedChars.indexOf(this._text[i]);
+       if(ind>-1)
+       if (!this._alignLeft) {
+        m[(4-this._text.length)+i]=ind;
+      } else {
+        m[i]=ind;
+      }
+     }
+    let numsEncoded = [0, 0, 0, 0].map((u, i) => codigitToSegment[m[i]] || 0);
+    if (this._split) numsEncoded[1] = numsEncoded[1] | 0b10000000;
+
+     this.start();
+     this.writeByte(0b01000000);
+     this.stop();
+
+     this.start();
+     this.writeByte(0b11000000);
+    for (let i = 0; i < numsEncoded.length; i++) {
+         this.writeByte(numsEncoded[i]);
+    }
+     this.stop();
+
+     this.start();
+     this.writeByte(0b10001111);
+     this.stop();
     }
 }
