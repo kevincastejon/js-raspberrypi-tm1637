@@ -1,6 +1,6 @@
 {
   "name": "raspberrypi-tm1637",
-  "version": "1.0.10",
+  "version": "1.1.0",
   "description": "Control LCD tm1637 display from a raspberry pi",
   "main": "TM1637.js",
   "scripts": {
